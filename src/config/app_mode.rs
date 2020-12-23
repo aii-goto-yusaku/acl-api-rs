@@ -1,6 +1,6 @@
+use serde::de::{Error, Unexpected, Visitor};
+use serde::export::Formatter;
 use serde::{Deserialize, Deserializer};
-use serde::de::{Visitor, Error, Unexpected};
-use serde::export::{Formatter};
 
 #[derive(Debug)]
 pub enum AppMode {
@@ -19,8 +19,8 @@ impl Default for AppMode {
 // 独自実装で Deserialize してみる
 impl<'de> Deserialize<'de> for AppMode {
     fn deserialize<D>(deserializer: D) -> Result<Self, <D as Deserializer<'de>>::Error>
-        where
-            D: Deserializer<'de>
+    where
+        D: Deserializer<'de>,
     {
         deserializer.deserialize_identifier(AppModeVisitor)
     }
@@ -36,14 +36,14 @@ impl<'de> Visitor<'de> for AppModeVisitor {
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-        where
-            E: Error,
+    where
+        E: Error,
     {
         match v.to_uppercase().as_str() {
             "PRODUCTION" => Ok(AppMode::PRODUCTION),
-            "DEVELOP"|"DEVELOPMENT" => Ok(AppMode::DEVELOP),
+            "DEVELOP" | "DEVELOPMENT" => Ok(AppMode::DEVELOP),
             "TEST" => Ok(AppMode::TEST),
-            _ => Err(Error::invalid_value(Unexpected::Str(v), &self))
+            _ => Err(Error::invalid_value(Unexpected::Str(v), &self)),
         }
     }
 }

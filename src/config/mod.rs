@@ -1,5 +1,6 @@
 mod app_mode;
 
+use anyhow::{Context, Result};
 use app_mode::AppMode;
 use serde::Deserialize;
 
@@ -21,8 +22,8 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn from_env() -> Result<Self, envy::Error> {
+    pub fn from_env() -> Result<Self> {
         dotenv::from_path(".env/.env_develop").ok();
-        envy::from_env()
+        envy::from_env().context("failed load config from environment")
     }
 }
