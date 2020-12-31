@@ -1,6 +1,6 @@
 pub mod parser;
 
-use crate::app::model::relation_tuple::parser::{RelationTupleParser, RelationTupleParserError};
+use crate::app::model::{relation_tuple, relation_tuple::parser::RelationTupleParserError};
 use actix_web::web::Query;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -62,6 +62,6 @@ impl TryInto<RelationTuple> for CheckQueryParam {
     type Error = RelationTupleParserError;
 
     fn try_into(self) -> Result<RelationTuple, Self::Error> {
-        RelationTupleParser::parse(&self.tuple)
+        relation_tuple::parser::parse(&self.tuple)
     }
 }

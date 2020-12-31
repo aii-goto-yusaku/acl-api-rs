@@ -6,7 +6,7 @@ use thiserror::Error;
 pub fn parse(token: &str) -> Result<RelationTuple, RelationTupleParserError> {
     let sharp_nth = token.find('#');
     let object = match sharp_nth {
-        Some(nth) => Ok(Self::parse_object(&token[..nth])?),
+        Some(nth) => Ok(parse_object(&token[..nth])?),
         None => Err(RelationTupleParserError::InvalidFormatRelationTupleError(
             token.to_string(),
         )),
@@ -16,7 +16,7 @@ pub fn parse(token: &str) -> Result<RelationTuple, RelationTupleParserError> {
     let (relation, user) = match token.find('@') {
         Some(nth) => Ok((
             token[sharp_nth + 1..nth].to_string(),
-            Self::parse_user(&token[nth + 1..])?,
+            parse_user(&token[nth + 1..])?,
         )),
         None => Err(RelationTupleParserError::InvalidFormatRelationTupleError(
             token.to_string(),
@@ -49,7 +49,7 @@ fn parse_object(token: &str) -> Result<Object, RelationTupleParserError> {
 fn parse_user(token: &str) -> Result<User, RelationTupleParserError> {
     Ok(match token.find('#') {
         Some(nth) => User::UserSet(UserSet {
-            object: Self::parse_object(&token[..nth])?,
+            object: parse_object(&token[..nth])?,
             relation: token[nth + 1..].to_string(),
         }),
         None => User::UserID(token.to_string()),
