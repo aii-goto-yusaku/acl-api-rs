@@ -1,12 +1,15 @@
+mod acl_controller;
+
+use crate::app::controller::acl_controller::acl_controller_factory;
 use crate::core::error::Error;
 use actix_web::{get, web, web::ServiceConfig, HttpResponse, Responder};
+use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-
-mod acl_controller;
 
 pub fn app_config(cfg: &mut ServiceConfig) {
     cfg.service(health);
     cfg.service(error);
+    acl_controller_factory(cfg);
 }
 
 #[get("/health")]
